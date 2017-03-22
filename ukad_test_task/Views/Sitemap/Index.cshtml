@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Determine", "Sitemap", FormMethod.Post, new { @class = "form-inline" }))
+{
+    <input type="text" name="url" class="form-control" placeholder="Enter site url..." />
+    <input type="submit" value="Submit" class="btn btn-primary" />
+}
+
+
+

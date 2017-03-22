@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ukad_test_task.Models.UrlResponseTime>
+@{
+    ViewBag.Title = "Determine";
+}
+@*<img src="@Url.Action("ChartBoxPlot")" alt="Chart" />*@ 
+<div class="container">
+    @{
+        var urls = Enumerable.Range(1, Model.Count()).ToArray();
+        var responsesTimes = Model.Select(resp => resp.MaxResponseTime).ToArray();
+        var chart = new Chart(width: 1200, height: 600, theme: ChartTheme.Blue)
+            .AddTitle("Responses")
+            .AddSeries(
+                name: "Title",
+                chartType: "Stock",
+                xValue: urls,
+                yValues: responsesTimes);
+        var chart_content = Convert.ToBase64String(chart.GetBytes("png"));
+    } 
+    <h1>Graphical representation</h1>
+    <img src="data:image/png;base64,@chart_content" />
+    <h1>Pages max and min responses speed</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <td><b>#</b></td>
+                <td><b>Url</b></td>
+                <td><b>Min response time (sec)</b></td>
+                <td><b>Max response time (sec)</b></td>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(index++)</td>
+                        <td><a href=@item.Url>@item.Url</a></td>
+                        <td>@item.MinResponseTime</td>
+                        <td>@item.MaxResponseTime</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+    

@@ -74,18 +74,16 @@ namespace ukad_test_task.Controllers
                             timer.Start();
                             try
                             {
-                                HttpWebResponse res = (HttpWebResponse)request.GetResponse();
-                                timer.Stop();
-                                responsesTimesList.Add(timer.Elapsed.TotalSeconds);
+                                HttpWebResponse res = (HttpWebResponse)request.GetResponse();                                
                             }
                             catch (WebException ex)
                             {
-                                //if there's a reference on the site, but it's 404
-                                responsesTimesList.Add(404);
+
                             }
                             finally
                             {
                                 timer.Stop();
+                                responsesTimesList.Add(timer.Elapsed.TotalSeconds);
                             }
                         }
                         responses.Add(new UrlResponseTime()
@@ -95,14 +93,7 @@ namespace ukad_test_task.Controllers
                             MinResponseTime = responsesTimesList.Min()
                         });
                     }
-                    //replacing the 404 max and min responses with maxresponse from all responses
-                    var indexesWith404 = responses.Select( (record, index) => new { Index = index});
-                    var maxResponseTime = responses.Max(record => record.MaxResponseTime);
-                    foreach (var item in indexesWith404)
-                    {
-                        responses[item.Index].MaxResponseTime = maxResponseTime;
-                        responses[item.Index].MinResponseTime = maxResponseTime;
-                    }
+                    
                     responses = responses.OrderByDescending(link => link.MaxResponseTime).ToList();
                     db.UrlResponseTime.AddRange(responses);
                     db.SaveChanges();
